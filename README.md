@@ -20,4 +20,10 @@ done by `Vuex`.
 - `npm run frontend` - starts vue production server
 - `npm run dev` - starts both => backend and frontend
 - `npm run build` - installs dependencies and builds the frontend# MonitoringPLTSGenerator
-# MonitoringPLTSGenerator
+
+#Hardware
+- `Pzem004-T`
+- `LCD TFT` 
+- `ESP32` 
+- `RS485 to TTL` 
+- `Temperature Sensor RS485` 
