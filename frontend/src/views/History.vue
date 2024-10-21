@@ -150,7 +150,6 @@ export default {
     async fetchHistoryData() {
       try {
         if (!this.selectedDate) return;
-
         const response = await api.getHistoryData(this.selectedType, this.selectedDate);
         this.rows = response.data
           .filter(item => item.timestamp)
