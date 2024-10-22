@@ -247,8 +247,10 @@ export default {
           this.isPLTSOnline = true;
         }
 
-        this.ptlslength = newRowsPlts.filter(row => row.date === today);
-        this.generatorlength = newRowsGenerator.filter(row => row.date === today);
+        this.ptlslength = newRowsPlts//newRowsPlts.filter(row => row.date === today);
+        this.generatorlength = newRowsGenerator//newRowsGenerator.filter(row => row.date === today);
+    //  console.log(`plts ${this.ptlslength.length} = ${newRowsPlts.length} `)
+      //console.log(`generator ${this.generatorlength.length} = ${newRowsGenerator.length} `)
 
       } catch (error) {
         this.$toast.error(`Error : ${error}`, { position: "bottom-left", duration: 1000 });
