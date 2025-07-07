@@ -1,112 +1,157 @@
 <template>
-  <Navbar />
-  <div class="p-6 bg-gray-100 min-h-screen">
-    <div class="flex flex-col items-center mb-6">
-      <label for="monitoringType" class="text-gray-700 text-sm font-semibold mb-2">Pilih Tipe Monitoring</label>
-      <select id="monitoringType" v-model="selectedType" @change="fetchData" class="form-select">
-        <option value="PLTS">PLTS</option>
-        <option value="Generator">Generator</option>
-      </select>
-    </div>
+  <div
+    class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-green-900 font-inter text-white px-4 py-8 sm:px-6 lg:px-8 overflow-hidden">
+    <!-- Navbar Component -->
+    <Navbar />
 
-    <div class="flex flex-col items-center mb-6">
-      <label for="chartType" class="font-semibold text-gray-700 text-sm mb-2">Pilih Grafik</label>
-      <select id="chartType" v-model="selectedChart" class="form-select">
-        <option value="all">Semua</option>
-        <option value="volt">Volt</option>
-        <option value="ampere">Ampere</option>
-        <option value="watt">Watt</option>
-        <option value="energy">KWh</option>
-        <option value="frequency">Frequency</option>
-        <option value="powerfactor">PowerFactor</option>
-        <option value="temp">Temperature</option>
-        <option value="humidity">Humidity</option>
-      </select>
-    </div>
+    <div class="max-w-7xl mx-auto mt-8">
+      <!-- Top Controls and Status -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Monitoring Type Selection -->
+        <div
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-700">
+          <label for="monitoringType" class="block text-sm sm:text-base font-semibold text-gray-200 mb-3">Pilih Tipe
+            Monitoring</label>
+          <select id="monitoringType" v-model="selectedType" @change="fetchData"
+            class="block w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-green-500 focus:border-green-500 transition duration-200 cursor-pointer">
+            <option value="PLTS" class="bg-gray-700 text-white">PLTS</option>
+            <option value="Generator" class="bg-gray-700 text-white">Generator</option>
+          </select>
+        </div>
 
-    <div class="space-y-4">
-      <div class="flex items-center space-x-2">
-        <span class="status-indicator"
-          :class="{ 'bg-green-500': isGeneratorOnline, 'bg-red-500': !isGeneratorOnline }"></span>
-        <h1 class="status-text">Status Generator: <span
-            :class="{ 'text-green-600': isGeneratorOnline, 'text-red-600': !isGeneratorOnline }">{{ isGeneratorOnline ?
-              'Online' : 'Offline' }}</span></h1>
+        <!-- Chart Type Selection -->
+        <div
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-700">
+          <label for="chartType" class="block text-sm sm:text-base font-semibold text-gray-200 mb-3">Pilih
+            Grafik</label>
+          <select id="chartType" v-model="selectedChart"
+            class="block w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-green-500 focus:border-green-500 transition duration-200 cursor-pointer">
+            <option value="all" class="bg-gray-700 text-white">Semua</option>
+            <option value="volt" class="bg-gray-700 text-white">Volt</option>
+            <option value="ampere" class="bg-gray-700 text-white">Ampere</option>
+            <option value="watt" class="bg-gray-700 text-white">Watt</option>
+            <option value="energy" class="bg-gray-700 text-white">KWh</option>
+            <option value="frequency" class="bg-gray-700 text-white">Frequency</option>
+            <option value="powerfactor" class="bg-gray-700 text-white">PowerFactor</option>
+            <option value="temp" class="bg-gray-700 text-white">Temperature</option>
+            <option value="humidity" class="bg-gray-700 text-white">Humidity</option>
+          </select>
+        </div>
+
+        <!-- Status Indicators -->
+        <div
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-700 flex flex-col justify-center space-y-4">
+          <div class="flex items-center space-x-3">
+            <span class="w-4 h-4 rounded-full flex-shrink-0"
+              :class="{ 'bg-green-500': isGeneratorOnline, 'bg-red-500': !isGeneratorOnline }"></span>
+            <h1 class="text-lg sm:text-xl font-semibold text-gray-200">Status Generator: <span
+                :class="{ 'text-green-400': isGeneratorOnline, 'text-red-400': !isGeneratorOnline }">{{
+                  isGeneratorOnline ?
+                    'Online' : 'Offline' }}</span></h1>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <span class="w-4 h-4 rounded-full flex-shrink-0"
+              :class="{ 'bg-green-500': isPLTSOnline, 'bg-red-500': !isPLTSOnline }"></span>
+            <h1 class="text-lg sm:text-xl font-semibold text-gray-200">Status PLTS: <span
+                :class="{ 'text-green-400': isPLTSOnline, 'text-red-400': !isPLTSOnline }">{{ isPLTSOnline ? 'Online' :
+                  'Offline' }}</span></h1>
+          </div>
+        </div>
       </div>
 
-      <div class="flex items-center space-x-2">
-        <span class="status-indicator" :class="{ 'bg-green-500': isPLTSOnline, 'bg-red-500': !isPLTSOnline }"></span>
-        <h1 class="status-text">Status PLTS: <span
-            :class="{ 'text-green-600': isPLTSOnline, 'text-red-600': !isPLTSOnline }">{{ isPLTSOnline ? 'Online' :
-            'Offline' }}</span></h1>
+      <h2 class="text-3xl font-extrabold text-center text-green-400 mb-8 tracking-wide">Data Monitoring Realtime</h2>
+
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Each LineChart component is wrapped in a themed card for consistency -->
+        <div v-if="showVoltChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`Volt (${selectedType})`" :lineData="voltData" />
+        </div>
+        <div v-if="showAmpereChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`Ampere (${selectedType})`" :lineData="ampereData" />
+        </div>
+        <div v-if="showWattChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`Watt (${selectedType})`" :lineData="wattData" />
+        </div>
+        <div v-if="showEnergyChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`KWh (${selectedType})`" :lineData="energyData" />
+        </div>
+        <div v-if="showFrequencyChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`Frequency (${selectedType})`" :lineData="frequencyData" />
+        </div>
+        <div v-if="showpowerfactorChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`Power Factor (${selectedType})`" :lineData="powerfactorData" />
+        </div>
+        <div v-if="showTempChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`Temperature (${selectedType})`" :lineData="tempData" />
+        </div>
+        <div v-if="showHumidityChart"
+          class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-4 border border-gray-700">
+          <LineChart :title="`Humidity (${selectedType})`" :lineData="humidityData" />
+        </div>
+      </div>
+      <div
+        class="bg-gray-800 bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-6 border border-gray-700 overflow-x-auto mb-6">
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead class="bg-gray-700">
+            <tr>
+              <th v-for="header in tableHeaders" :key="header"
+                class="py-3 px-4 text-xs font-semibold text-gray-300 uppercase tracking-wider text-center">
+                {{ header }}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            <tr v-if="rows.length === 0">
+              <td colspan="10" class="text-center py-4 text-gray-400">No data available for today.</td>
+            </tr>
+            <tr v-for="row in paginatedRows" :key="row.time" class="hover:bg-gray-700 transition-colors">
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.voltage }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.current }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.power }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.energy }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.frequency }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.powerfactor }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.temperature }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.humidity }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.date }}</td>
+              <td class="py-3 px-4 text-center text-gray-200">{{ row.time }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex flex-col sm:flex-row justify-between items-center mt-6 mb-12 space-y-4 sm:space-y-0">
+        <button @click="prevPage" :disabled="currentPage === 1"
+          class="py-2 px-4 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200">Prev</button>
+        <div class="flex items-center">
+          <span class="mx-2 text-gray-300 text-sm sm:text-base">Page {{ currentPage }} of {{ totalPages }}</span>
+          <select v-model="currentPage"
+            class="p-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200 cursor-pointer">
+            <option v-for="page in totalPages" :key="page" :value="page" class="bg-gray-700 text-white">Page {{ page }}
+            </option>
+          </select>
+        </div>
+        <button @click="nextPage" :disabled="currentPage === totalPages"
+          class="py-2 px-4 bg-gray-700 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200">Next</button>
       </div>
     </div>
-
-    <div class="flex flex-col items-center mb-6">
-      <h2 class="text-2xl font-semibold text-gray-800">Data Monitoring Realtime</h2>
-    </div>
-
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <LineChart v-if="showVoltChart" :title="`Volt (${selectedType})`" :lineData="voltData" />
-      <LineChart v-if="showAmpereChart" :title="`Ampere (${selectedType})`" :lineData="ampereData" />
-      <LineChart v-if="showWattChart" :title="`Watt (${selectedType})`" :lineData="wattData" />
-      <LineChart v-if="showEnergyChart" :title="`KWh (${selectedType})`" :lineData="energyData" />
-      <LineChart v-if="showFrequencyChart" :title="`Frequency (${selectedType})`" :lineData="frequencyData" />
-      <LineChart v-if="showpowerfactorChart" :title="`Power Factor (${selectedType})`" :lineData="powerfactorData" />
-      <LineChart v-if="showTempChart" :title="`Temperature (${selectedType})`" :lineData="tempData" />
-      <LineChart v-if="showHumidityChart" :title="`Humidity (${selectedType})`" :lineData="humidityData" />
-    </div>
-
-
-    <div class="overflow-x-auto mb-6">
-      <table class="min-w-full divide-y divide-gray-200 bg-white border border-gray-300 shadow-lg rounded-lg">
-        <thead class="bg-gray-50">
-          <tr>
-            <th v-for="header in tableHeaders" :key="header"
-              class="text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-300 text-center">
-              {{ header }}</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-if="rows.length === 0">
-            <td colspan="10" class="text-center py-4">No data available for today.</td>
-          </tr>
-          <tr v-for="row in paginatedRows" :key="row.time" class="hover:bg-gray-50 transition-colors">
-            <td class="text-center border-b border-gray-300">{{ row.voltage }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.current }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.power }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.energy }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.frequency }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.powerfactor }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.temperature }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.humidity }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.date }}</td>
-            <td class="text-center border-b border-gray-300">{{ row.time }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-
-    <div class="flex justify-between items-center mt-6 mb-12">
-      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-button">Prev</button>
-      <div class="flex items-center">
-        <span class="mx-2 text-gray-700">Page {{ currentPage }} of {{ totalPages }}</span>
-        <select v-model="currentPage" class="pagination-select">
-          <option v-for="page in totalPages" :key="page" :value="page">Page {{ page }}</option>
-        </select>
-      </div>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-button">Next</button>
-    </div>
+    <Footer />
   </div>
-  <Footer />
 </template>
 
 <script>
 import LineChart from "../components/LineChart.vue";
-import api from "@/services/allApi";
+import api from "@/services/api";
 import Navbar from "@/components/Navbar.vue";
 import Footer from "@/components/Footer.vue";
+import Swal from 'sweetalert2';
 export default {
   name: "HomePage",
   components: { LineChart, Navbar, Footer },
@@ -135,25 +180,25 @@ export default {
       return this.createChartData('voltage', 'Volt', '#42A5F5');
     },
     ampereData() {
-      return this.createChartData('current', 'Ampere', '#FF5722');
+      return this.createChartData('current', 'Ampere', '#FF9800');
     },
     wattData() {
-      return this.createChartData('power', 'Watt', '#66BB6A');
+      return this.createChartData('power', 'Watt', '#4CAF50');
     },
     energyData() {
-      return this.createChartData('energy', 'KWh', '#66BB6A');
+      return this.createChartData('energy', 'KWh', '#9C27B0');
     },
     frequencyData() {
-      return this.createChartData('frequency', 'Hz', '#66BB6A');
+      return this.createChartData('frequency', 'Hz', '#00BCD4');
     },
     powerfactorData() {
-      return this.createChartData('powerfactor', 'cosphi', '#66BB6A');
+      return this.createChartData('powerfactor', 'cosphi', '#FFC107');
     },
     tempData() {
-      return this.createChartData('temperature', 'Temperature', '#FF0000');
+      return this.createChartData('temperature', 'Temperature', '#F44336');
     },
     humidityData() {
-      return this.createChartData('humidity', 'Humidity', '#0000FF');
+      return this.createChartData('humidity', 'Humidity', '#42A5F5');
     },
     showVoltChart() {
       return this.selectedChart === 'all' || this.selectedChart === 'volt';
@@ -185,15 +230,21 @@ export default {
   },
   methods: {
     async fetchData() {
+      Swal.fire({
+        title: 'Memuat data...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
       try {
-        const responseGenerator = await api.getGeneratorData()
-        const responsePlts = await api.getPLTSData();
-        //console.log('API Response generator:', responseGenerator.data);
-        //console.log('API Response PLTS :', responsePlts.data);
-
+        const responseGenerator = await api.getGeneratorDataLast()
+        const responsePlts = await api.getPLTSDataLast();
+        const Status = await api.GetStatus();
+        this.isGeneratorOnline = Status.data.Generator.status === "Online"
+        this.isPLTSOnline = Status.data.PLTS.status === "Online"
         const today = new Date().toISOString().split('T')[0];
-       // console.log('Today:', today);
-
         const newRowsPlts = responsePlts.data
           .filter(item => item.timestamp)
           .map(item => {
@@ -234,26 +285,14 @@ export default {
         } else {
           this.rows = newRowsPlts.filter(row => row.date === today);
         }
-
-        if (this.generatorlength.length === newRowsGenerator.length) {
-          this.isGeneratorOnline = false;
-        } else {
-          this.isGeneratorOnline = true;
-        }
-
-        if (this.ptlslength.length === newRowsPlts.length) {
-          this.isPLTSOnline = false;
-        } else {
-          this.isPLTSOnline = true;
-        }
-
-        this.ptlslength = newRowsPlts//newRowsPlts.filter(row => row.date === today);
-        this.generatorlength = newRowsGenerator//newRowsGenerator.filter(row => row.date === today);
-    //  console.log(`plts ${this.ptlslength.length} = ${newRowsPlts.length} `)
-      //console.log(`generator ${this.generatorlength.length} = ${newRowsGenerator.length} `)
-
+        Swal.close();
       } catch (error) {
-        this.$toast.error(`Error : ${error}`, { position: "bottom-left", duration: 1000 });
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal memuat data!',
+          text: error.message || 'Terjadi kesalahan saat mengambil data.',
+        });
       }
     },
     createChartData(key, label, color) {
@@ -264,7 +303,7 @@ export default {
           data: this.rows.map(row => row[key]),
           fill: false,
           borderColor: color,
-          tension: 0.1,
+          tension: 0.2,
         }],
       };
     },
@@ -297,41 +336,30 @@ export default {
 </script>
 
 <style scoped>
-.form-select {
-  width: 100%;
-  max-width: 400px;
-  border: 1px solid #ccc;
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-  margin-top: 0.5rem;
+.font-inter {
+  font-family: 'Inter', sans-serif;
 }
 
-.status-indicator {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+.hover\:shadow-glow:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 255, 0, 0.3), 0 0 45px rgba(0, 255, 0, 0.1);
 }
 
-.status-text {
-  font-size: 1rem;
-  font-weight: 600;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.pagination-button {
-  padding: 0.5rem 1rem;
-  background-color: #1d4ed8;
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
+::-webkit-scrollbar-track {
+  background: #333;
+  border-radius: 10px;
 }
 
-.pagination-button:disabled {
-  background-color: #3b82f6;
-  opacity: 0.5;
+::-webkit-scrollbar-thumb {
+  background: #0f9f30;
+  border-radius: 10px;
 }
 
-.pagination-select {
-  margin-left: 0.5rem;
+::-webkit-scrollbar-thumb:hover {
+  background: #0a7d23;
 }
 </style>

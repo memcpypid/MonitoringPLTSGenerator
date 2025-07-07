@@ -1,3 +1,3 @@
 <template>
-<router-view /> <!-- Tempat komponen halaman akan dirender -->
+    <router-view /> <!-- Tempat komponen halaman akan dirender -->
 </template>

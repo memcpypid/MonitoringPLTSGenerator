@@ -1,17 +1,21 @@
-require('dotenv').config()
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
 // middleware
-if (process.env.NODE_ENV === "development") {
-    app.use(cors({ origin: "http://192.168.1.2:8081", credentials: true }));
+if (process.env.NODE_ENV === "production") {
+  app.use(cors({ origin: process.env.VUE_APP_SERVER, credentials: true }));
+  console.log("CORS origin:", process.env.VUE_APP_SERVER);
 } else {
-    app.use(cors());
+  app.use(
+    cors({ origin: process.env.VUE_APP_SERVER_DEVELOPMENT, credentials: true })
+  );
+  console.log("CORS origin:", process.env.VUE_APP_SERVER_DEVELOPMENT);
 }
 app.use(morgan("dev"));
 app.use(express.json());
@@ -20,23 +24,27 @@ app.use(cookieParser());
 
 // connect db
 
-mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("INFO - MongoDB connected successfully."))
-    .catch((err) => console.log(`ERROR - MongoDB not connected : ${err} `));
+mongoose
+  .connect(process.env.DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("INFO - MongoDB connected successfully."))
+  .catch((err) => console.log(`ERROR - MongoDB not connected : ${err} `));
 
 // register api routes
 const apiRoutes = require("./routes");
 const path = require("path");
-app.use("/api", apiRoutes)
+app.use("/api", apiRoutes);
 
 // register SPA routes
 app.use(express.static(path.join(__dirname + "/public")));
 app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "public", "index.html"));
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
 });
 
 // run server
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`)
+  console.log(`Server is listening on port ${port}`);
 });

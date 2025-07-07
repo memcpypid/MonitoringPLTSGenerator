@@ -1,6 +1,6 @@
 <template>
   <div class="line-chart-container">
-    <h3 class="text-xl font-semibold mb-2">{{ title }}</h3>
+    <h3 class="text-xl text-white font-semibold mb-2">{{ title }}</h3>
     <Line :data="lineData" :options="lineOptions" />
   </div>
 </template>
@@ -31,11 +31,15 @@ export default {
         responsive: true,
         plugins: {
           legend: {
-            position: 'top'
+            position: 'top',
+            labels: {
+              color: '#fff'
+            }
           },
+
           tooltip: {
             callbacks: {
-              label: function(context) {
+              label: function (context) {
                 return `Value: ${context.parsed.y}`;
               }
             }
@@ -45,13 +49,22 @@ export default {
           x: {
             title: {
               display: true,
-              text: 'Time'
+              text: 'Waktu',
+              color: '#fff'
+            }
+            ,
+            ticks: {
+              color: '#fff' // Ubah warna label tick sumbu Y
             }
           },
           y: {
             title: {
               display: true,
-              text: 'Value'
+              text: 'Nilai',
+              color: '#fff'
+            },
+            ticks: {
+              color: '#fff' // Ubah warna label tick sumbu Y
             }
           }
         }

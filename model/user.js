@@ -20,6 +20,11 @@ const user = new Schema({
     type: Boolean,
     default: false,
   },
+  role: {
+    type: String,
+    required: true,
+    default: "user",
+  },
   registrationDate: {
     type: Date,
     default: Date.now,

@@ -1,14 +1,9 @@
-import {createApp} from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
 
 import router from "./services/router";
 import store from "./services/store";
-import './assets/styles/tailwind.css';
-import VueToast from 'vue-toast-notification';
-import "vue-toast-notification/dist/theme-sugar.css";
-
-createApp(App)
-    .use(router)
-    .use(VueToast)
-    .use(store)
-    .mount("#app");
+import "./index.css";
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+createApp(App).use(router).use(VueSweetalert2).use(store).mount("#app");
