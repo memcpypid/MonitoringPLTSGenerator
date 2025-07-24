@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import TambahHasilPanen from "@/views/TambahHasilPanen.vue";
 import HasilPanen from "@/views/HasilPanen.vue";
+import Maps from "@/views/Maps.vue";
 import store from "@/services/store";
 const routes = [
   {
@@ -62,6 +63,15 @@ const routes = [
     },
   },
   {
+    path: "/maps",
+    name: "Maps",
+    component: Maps,
+    meta: {
+      title: "Maps",
+      authRequired: true,
+    },
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: () => import("../views/NotFound.vue"),
@@ -78,9 +88,9 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  //   if (!store.state.isStoreUpdated) {
-  await store.dispatch("updateStore");
-  //   }
+  if (to.meta.authRequired) {
+    await store.dispatch("updateStore");
+  }
 
   const isAuthenticated = store.state.userLoggedIn;
 

@@ -179,7 +179,7 @@ export default {
         Swal.fire({
           icon: 'error',
           title: 'Gagal memuat data!',
-          text: error.message || 'Terjadi kesalahan saat mengambil data.',
+          text: error.response.data.message || 'Terjadi kesalahan saat mengambil data.',
         });
       }
     },

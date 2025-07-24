@@ -66,6 +66,7 @@
               active-class="bg-gray-700 text-green-400">History</router-link></li>
           <li><router-link to="/hasil-panen" class="nav-link" active-class="bg-gray-700 text-green-400">Hasil
               Panen</router-link></li>
+          <li><router-link to="/maps" class="nav-link" active-class="bg-gray-700 text-green-400">Maps</router-link></li>
           <li v-if="userRole && userRole.role === 'admin'">
             <router-link to="/tambah-hasil-panen" class="nav-link" active-class="bg-gray-700 text-green-400">
               Tambah Hasil Panen
