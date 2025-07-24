@@ -16,14 +16,14 @@ const createJwt = (payload) => {
   });
 };
 // Get semua data berdasarkan tahun dan bulan
-router.get("/hasilpanen", async (req, res) => {
+router.get("/hasilpanen", requireLogin, async (req, res) => {
   const { year, month } = req.query;
   const data = await HasilPanen.find({ year, month }).sort({ week: 1 });
   res.json(data);
 });
 
 // Tambah data baru
-router.post("/hasilpanen", async (req, res) => {
+router.post("/hasilpanen", requireLogin, async (req, res) => {
   try {
     const entry = new HasilPanen(req.body);
     await entry.save();
@@ -34,7 +34,7 @@ router.post("/hasilpanen", async (req, res) => {
 });
 
 // Update data
-router.put("/hasilpanen/:id", async (req, res) => {
+router.put("/hasilpanen/:id", requireLogin, async (req, res) => {
   try {
     const updated = await HasilPanen.findByIdAndUpdate(
       req.params.id,
@@ -48,7 +48,7 @@ router.put("/hasilpanen/:id", async (req, res) => {
 });
 
 // Hapus data
-router.delete("/hasilpanen/:id", async (req, res) => {
+router.delete("/hasilpanen/:id", requireLogin, async (req, res) => {
   await HasilPanen.findByIdAndDelete(req.params.id);
   res.json({ message: "Deleted" });
 });

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const PLTS = require("./model/plts"); // Ganti jika nama file model berbeda
+const PLTS = require("./model/generator"); // Ganti jika nama file model berbeda
 
 const mongoURI =
   "mongodb://Smartsolar:SmartSolar123@ac-fj2dlex-shard-00-00.xzpck0p.mongodb.net:27017,ac-fj2dlex-shard-00-01.xzpck0p.mongodb.net:27017,ac-fj2dlex-shard-00-02.xzpck0p.mongodb.net:27017/Monitoring?replicaSet=atlas-9xu2vu-shard-0&ssl=true&authSource=admin";
@@ -25,8 +25,8 @@ db.once("open", async () => {
     const timestamp = new Date(current);
     timestamp.setSeconds(Math.floor(Math.random() * 60)); // detik random
 
-    const voltage = parseFloat((Math.random() * 20 + 200).toFixed(2)); // 200 - 220 V
-    const currentAmp = parseFloat((Math.random() * 9 + 1).toFixed(2)); // 1 - 10 A
+    const voltage = parseFloat((Math.random() * (7 - 4) + 4).toFixed(2)); // 4.00 - 7.00 V
+    const currentAmp = parseFloat((Math.random() * (3 - 0.5) + 0.5).toFixed(2)); // 0.50 - 3.00 A
     const power = parseFloat((voltage * currentAmp).toFixed(2)); // watt
     const energy = parseFloat((power / 60 / 1000).toFixed(4)); // kWh tiap menit
     const frequency = parseFloat((Math.random() * 1 + 49.5).toFixed(2)); // 49.5 - 50.5 Hz
